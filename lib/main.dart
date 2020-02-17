@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quizz_app/question.dart';
 
 void main() => runApp(QuizApp());
 
@@ -27,6 +28,23 @@ class QuestionsPage extends StatefulWidget {
 }
 
 class _QuestionsPageState extends State<QuestionsPage> {
+  List<Question> questions = [
+    Question(text: 'Flutter is mobile development SDK', answer: true),
+    Question(text: 'HTML is prograamming language', answer: false),
+    Question(text: 'Laravel is php Framework', answer: true)
+  ];
+
+  List<bool> answers = [false, true, true];
+
+  int currentQuestion = 0;
+  int score = 0;
+
+  void nextQuestion() {
+    setState(() {
+      currentQuestion++;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,7 +54,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
         Expanded(
           flex: 4,
           child: Text(
-            'Flutter is the best Mobile sdk',
+            questions[currentQuestion].text,
             style: TextStyle(color: Colors.white, fontSize: 32.0),
           ),
         ),
@@ -47,7 +65,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
             buttonColor: Colors.white,
             splashColor: Colors.orange,
             child: RaisedButton(
-              onPressed: () {},
+              onPressed: () {
+                nextQuestion();
+              },
               child: Text('True', style: TextStyle(fontSize: 32.0)),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
@@ -65,7 +85,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
             buttonColor: Colors.white,
             splashColor: Colors.orange,
             child: RaisedButton(
-              onPressed: () {},
+              onPressed: () {
+                nextQuestion();
+              },
               child: Text('False', style: TextStyle(fontSize: 32.0)),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
