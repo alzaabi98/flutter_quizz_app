@@ -31,6 +31,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
   List<Question> questions = [
     Question(text: 'Flutter is mobile development SDK', answer: true),
     Question(text: 'HTML is prograamming language', answer: false),
+    Question(text: 'Laravel is php Framework', answer: true),
+    Question(text: 'Flutter is mobile development SDK', answer: true),
+    Question(text: 'HTML is prograamming language', answer: false),
     Question(text: 'Laravel is php Framework', answer: true)
   ];
 
@@ -38,10 +41,25 @@ class _QuestionsPageState extends State<QuestionsPage> {
 
   int currentQuestion = 0;
   int score = 0;
-
-  void nextQuestion() {
+  int correctCounter = 0;
+  int wrongCounter = 0;
+  bool quizCompleted = false;
+  void nextQuestion(bool answer) {
     setState(() {
-      currentQuestion++;
+      if (!quizCompleted) {
+        if (questions[currentQuestion].answer == answer) {
+          correctCounter++;
+        } else {
+          wrongCounter++;
+        }
+      }
+
+      if (questions.length - 1 > currentQuestion) {
+        currentQuestion++;
+      } else {
+        print(' The quiz is over');
+        quizCompleted = true;
+      }
     });
   }
 
@@ -66,7 +84,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
             splashColor: Colors.orange,
             child: RaisedButton(
               onPressed: () {
-                nextQuestion();
+                nextQuestion(true);
               },
               child: Text('True', style: TextStyle(fontSize: 32.0)),
               shape: RoundedRectangleBorder(
@@ -86,7 +104,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
             splashColor: Colors.orange,
             child: RaisedButton(
               onPressed: () {
-                nextQuestion();
+                nextQuestion(false);
               },
               child: Text('False', style: TextStyle(fontSize: 32.0)),
               shape: RoundedRectangleBorder(
@@ -116,7 +134,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                     height: 10,
                   ),
                   Text(
-                    '10',
+                    correctCounter.toString(),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
@@ -137,7 +155,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                     height: 10,
                   ),
                   Text(
-                    '2',
+                    wrongCounter.toString(),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
