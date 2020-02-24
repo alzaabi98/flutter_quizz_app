@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quizz_app/question.dart';
+//import 'package:flutter_quizz_app/question.dart';
+import 'package:flutter_quizz_app/questions.dart';
 
 void main() => runApp(QuizApp());
 
@@ -28,27 +29,19 @@ class QuestionsPage extends StatefulWidget {
 }
 
 class _QuestionsPageState extends State<QuestionsPage> {
-  List<Question> questions = [
-    Question(text: 'Flutter is mobile development SDK', answer: true),
-    Question(text: 'HTML is prograamming language', answer: false),
-    Question(text: 'Laravel is php Framework', answer: true),
-    Question(text: 'Flutter is mobile development SDK', answer: true),
-    Question(text: 'HTML is prograamming language', answer: false),
-    Question(text: 'Laravel is php Framework', answer: true)
-  ];
-
-  List<bool> answers = [false, true, true];
+  //List<bool> answers = [false, true, true];
 
   int currentQuestion = 0;
   int score = 0;
   int correctCounter = 0;
   int wrongCounter = 0;
   bool quizCompleted = false;
-  void nextQuestion(bool answer) {
+  void nextQuestion(bool answer, BuildContext context) {
     setState(() {
       if (!quizCompleted) {
         if (questions[currentQuestion].answer == answer) {
           correctCounter++;
+          score += 10;
         } else {
           wrongCounter++;
         }
@@ -59,8 +52,58 @@ class _QuestionsPageState extends State<QuestionsPage> {
       } else {
         print(' The quiz is over');
         quizCompleted = true;
+        showResults(context);
       }
     });
+  }
+
+  void showResults(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Quiz Completed',
+              style: TextStyle(fontSize: 32.0),
+              textAlign: TextAlign.center,
+            ),
+            content: Container(
+              height: 200.0,
+              child: Column(
+                children: <Widget>[
+                  Icon(
+                    Icons.tag_faces,
+                    size: 52.0,
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(' Thank for your particpation '),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Text('Your score is ($score) points')
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Reset'),
+                onPressed: () {
+                  setState(() {
+                    quizCompleted = false;
+                    score = 0;
+                    currentQuestion = 0;
+                    wrongCounter = 0;
+                    correctCounter = 0;
+                  });
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
@@ -84,7 +127,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
             splashColor: Colors.orange,
             child: RaisedButton(
               onPressed: () {
-                nextQuestion(true);
+                nextQuestion(true, context);
               },
               child: Text('True', style: TextStyle(fontSize: 32.0)),
               shape: RoundedRectangleBorder(
@@ -104,7 +147,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
             splashColor: Colors.orange,
             child: RaisedButton(
               onPressed: () {
-                nextQuestion(false);
+                nextQuestion(false, context);
               },
               child: Text('False', style: TextStyle(fontSize: 32.0)),
               shape: RoundedRectangleBorder(
